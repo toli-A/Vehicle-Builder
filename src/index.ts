@@ -8,7 +8,7 @@ import Cli from "./classes/Cli.js";
 // create an array of vehicles
 const vehicles = [];
 
-const truck1 = new Truck(Cli.generateVin(),"red", "Ford", "F-150", 2021, 5000, 120, [], 10000);
+const truck1 = new Truck(Cli.generateVin(), "red", "Ford", "F-150", 2021, 5000, 120, [], 10000);
 
 // will use default wheels
 const car1 = new Car(
