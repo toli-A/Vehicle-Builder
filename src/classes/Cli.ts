@@ -249,6 +249,8 @@ class Cli {
       ])
       .then((answers) => {
         // Use the answers object to pass the required properties to the Motorbike constructor
+        const frontWheel = new Wheel(answers.frontWheelDiameter, answers.frontWheelBrand)
+        const rearWheel = new Wheel(answers.rearWheelDiameter, answers.rearWheelBrand)
         const motorbike = new Motorbike(
           Cli.generateVin(),
           answers.color,
@@ -257,7 +259,7 @@ class Cli {
           parseInt(answers.year),
           parseInt(answers.weight),
           parseInt(answers.topSpeed),
-          [],
+          [frontWheel, rearWheel],
         )
         // push the motorbike to the vehicles array
         this.vehicles.push(motorbike);
@@ -270,7 +272,7 @@ class Cli {
 
   // method to find a vehicle to tow
   // add a parameter to accept a truck object
-  findVehicleToTow(truck: Truck): void {
+  findVehicleToTow(currentTruck: Truck): void {
     inquirer
       .prompt([
         {
@@ -287,12 +289,13 @@ class Cli {
       ])
       .then((answers) => {
         // check if the selected vehicle is the truck
-        if (answers.vehicleToTow === truck.vin) {
+        if (answers.vehicleToTow === currentTruck.vin) {
           // if it is, log that the truck cannot tow itself then perform actions on the truck to allow the user to select another action
           console.log(`Truck cannot tow itself`);
           this.performActions();
           // if it is not, tow the selected vehicle then perform actions on the truck to allow the user to select another action
-          truck.tow(answers.vehicleToTow);
+        } else {
+          currentTruck.tow(answers.vehicleToTow);
           this.performActions();
         }
       });
@@ -406,7 +409,6 @@ class Cli {
               if (this.vehicles[i] instanceof Motorbike) {
                 if (this.vehicles[i].started === true) {
                   (this.vehicles[i] as Motorbike).wheelie();
-                  return;
                 } else {
                   console.log("Start the Bike First")
                 }
